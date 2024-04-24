@@ -23,14 +23,11 @@ app.get('/', (req, res) => {
     const getNames = `SELECT name FROM people`;
     connection.query(getNames, (error, results) => {
         if (error) {
-            console.error('Erro ao obter os nomes:', error);
             return res.status(500).send('Erro ao obter os nomes');
         }
         const names = results.map(row => row.name);
-        console.log('Nomes:', names);
         res.send(`
             <h1>Full Cycle Rocks!</h1>
-            <h2>Nomes cadastrados:</h2>
             <ul>
                 ${names.map(name => `<li>${name}</li>`).join('')}
             </ul>
