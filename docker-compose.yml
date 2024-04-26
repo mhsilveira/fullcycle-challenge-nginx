@@ -1,21 +1,18 @@
-version: '3'
-
-## obrigatório que estejam na mesma rede, e as dependências anexadas corretamente. Não vou utilizar Dockerize nessa vez.
+version: "3"
 
 services:
-  app:
+  node:
     build:
       context: ./node
       dockerfile: Dockerfile
     restart: always
-    entrypoint: dockerize -wait tcp://db:3306 -timeout 20s node index.js
-    container_name: app
+    entrypoint: sh -c "dockerize -wait tcp://db:3306 -timeout 20s npm install && node index.js"
+    container_name: node
     volumes:
       - ./node:/usr/src/app
-      - /usr/src/app/node_modules
     tty: true
-    depends_on: 
-      - db    
+    depends_on:
+      - db
     networks:
       - node-network
 
@@ -42,7 +39,7 @@ services:
     ports:
       - "8080:80"
     depends_on:
-      - app
+      - node
       - db
     networks:
       - node-network
